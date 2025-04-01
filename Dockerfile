@@ -209,7 +209,14 @@ RUN mkdir -p ${HOME}/OpenMC && cd ${HOME}/OpenMC \
                             -DOPENMC_USE_LIBMESH=on; \
                             -DCMAKE_PREFIX_PATH=${LIBMESH_INSTALL_DIR}" ; \
     fi ; \
-    pip -v install .[test,depletion-mpi] \
+    if [ ${build_dagmc} = "off" ] && [ ${build_libmesh} = "off" ]; then \
+        cmake ../openmc \
+            -DCMAKE_CXX_COMPILER=mpicxx \
+            -DOPENMC_USE_MPI=on \
+            -DHDF5_PREFER_PARALLEL=on ; \
+    fi ; \
+    make 2>/dev/null -j${compile_cores} install \
+    && cd ../openmc && pip install .[test,depletion-mpi] \
     && python -c "import openmc"
 
 FROM build AS release

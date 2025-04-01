@@ -42,6 +42,6 @@ if [[ $MPI == 'y' ]]; then
     pip install --no-binary=h5py h5py
 fi
 
-# Build and install OpenMC
+# Build and install OpenMC executable
 python tools/ci/gha-install.py
 

@@ -38,10 +38,11 @@ def install(omp=False, mpi=False, phdf5=False, dagmc=False, libmesh=False):
     cmake_args.append('-DOPENMC_ENABLE_COVERAGE=on')
 
     # Set environment variable for SKBUILD
-    os.environ['SKBUILD_CMAKE_ARGS'] = ';'.join(cmake_args)
+    os.environ['SKBUILD_cmake_args'] = ';'.join(cmake_args)
 
     # Run pip to build and install
     pip_suffix = '--config-settings=cmake.args="' + ';'.join(cmake_args) + '"'
+
     subprocess.check_call(['pip', '-v', 'install', '.[test,vtk,ci]', pip_suffix])
 
     # Using standard CMake method
@@ -53,8 +54,6 @@ def install(omp=False, mpi=False, phdf5=False, dagmc=False, libmesh=False):
     # Add CMake arguments for standard method
     cmake_cmd = ['cmake', '..'] + cmake_args
     print(' '.join(cmake_cmd))
-
-    # Run CMake and build
     subprocess.check_call(cmake_cmd)
     subprocess.check_call(['make', '-j4'])
     subprocess.check_call(['sudo', 'make', 'install'])
